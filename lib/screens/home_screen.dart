@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_biblioteca/components/books_widget.dart';
 import 'package:flutter_biblioteca/components/menu.dart';
-import 'package:flutter_biblioteca/models/book.dart';
+import 'package:flutter_biblioteca/models/book_model.dart';
+import 'package:animated_book_widget/animated_book_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -14,12 +16,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Books> listBooks = [];
+  bool horizontalView = false;
+
+  List<BooksModel> allBooks = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
+    fetchInitialData();
+  }
+
+  Future<void> fetchInitialData() async {
+    List<BooksModel> booksList = [];
+    var snapshot = await FirebaseFirestore.instance.collection("livros").get();
+    booksList =
+        snapshot.docs.map((doc) => BooksModel.fromFirestore(doc)).toList();
+
+    setState(() {
+      allBooks = booksList;
+    });
   }
 
   @override
@@ -33,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {},
         child: Icon(Icons.add),
       ),
-      body: (listBooks.isEmpty)
+      body: (allBooks.isEmpty)
           ? const Center(
               child: Text(
               'Nada por aqui. \nVamos registrar novos livros?',
@@ -42,10 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ))
           : ListView(
               padding: EdgeInsets.only(left: 4, right: 4),
-              children: List.generate(listBooks.length, (index) {
-                Books model = listBooks[index];
+              children: List.generate(allBooks.length, (index) {
+                BooksModel model = allBooks[index];
                 return Dismissible(
-                  key: ValueKey<Books>(model),
+                  key: ValueKey<BooksModel>(model),
                   direction: DismissDirection.endToStart,
                   background: Container(
                     alignment: Alignment.centerRight,
@@ -59,29 +75,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   onDismissed: (direction) {
                     remove(model);
                   },
-                  child: Card(
-                    elevation: 2,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          onLongPress: () {},
-                          onTap: () {},
-                          leading: Icon(
-                            Icons.list_alt_rounded,
-                            size: 56,
-                          ),
-                          title: Text("Id: ${model.id} Data: ${model.data} "),
-                          subtitle: Text(model.descricao!),
-                        )
-                      ],
-                    ),
-                  ),
+                  child: BooksWidgetCard(horizontalView: horizontalView, books: allBooks,),
+                  // child: Text("teste"),
+                  // Card(
+                  //   elevation: 2,
+                  //   child: Column(
+                  //     children: [
+                  //       ListTile(
+                  //         onLongPress: () {},
+                  //         onTap: () {},
+                  //         leading: Icon(
+                  //           Icons.list_alt_rounded,
+                  //           size: 56,
+                  //         ),
+                  //         title: Text("Id: ${model.id} Data: ${model.nome} "),
+                  //         subtitle: Text(model.sinopse!),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                 );
               }),
             ),
     );
   }
-  void remove(Books model) {}
+
+  void remove(BooksModel model) {}
 }
-
-
