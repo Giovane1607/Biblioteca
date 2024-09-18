@@ -1,15 +1,119 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_biblioteca/screens/home_screen.dart';
 import 'package:flutter_biblioteca/screens/register_screen.dart';
+import 'package:flutter_biblioteca/utils/dialog_utils.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _senhaController = TextEditingController();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late final TextEditingController _emailController;
+  late final TextEditingController _senhaController;
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _senhaController = TextEditingController();
+    super.initState();
+  }
+  
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _senhaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Future<void> validaLogin() async {
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _senhaController.text.trim(),
+        );
+
+      } on FirebaseAuthException catch (e) {
+        switch (e.code) {
+          case 'user-not-found':
+            showCustomDialog(
+              title: 'Oops, tem certeza?',
+              message: 'Usuário não encontrado!',
+              onConfirm: () {
+                Get.back();
+              },
+              showCancelButton: false,
+            );
+            break;
+          case 'wrong-password':
+
+          case 'invalid-credential':
+            showCustomDialog(
+              title: 'Oops, tem certeza?',
+              message: 'Usuário ou senha incorretos!',
+              onConfirm: () {
+                Get.back();
+              },
+              showCancelButton: false,
+            );
+            break;
+
+          case 'channel-error':
+            showCustomDialog(
+              title: 'Informações faltando!',
+              message: 'Preencha seu e-mail e sua senha!',
+              onConfirm: () {
+                Get.back();
+              },
+              showCancelButton: false,
+            );
+            break;
+          case 'INVALID_LOGIN_CREDENTIALS':
+            showCustomDialog(
+              title: 'Oops, tem certeza?',
+              message: 'Usuário ou senha incorretos!',
+              onConfirm: () {
+                Get.back();
+              },
+              showCancelButton: false,
+            );
+            break;
+          default:
+            showCustomDialog(
+              title: 'Oops, não foi possível autenticar!',
+              message: 'Ocorreu um erro ao entrar.',
+              onConfirm: () {
+                Get.back();
+              },
+              showCancelButton: false,
+            );
+            break;
+        }
+      } catch (e) {
+        showCustomDialog(
+          title: 'Oops, não foi possível autenticar!',
+          message: '$e',
+          onConfirm: () {
+            Get.back();
+          },
+          showCancelButton: false,
+        );
+      }
+    }
+
     return Scaffold(
       body: Container(
         color: Colors.blue,
@@ -47,7 +151,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: validaLogin,
                       child: Text(
                         'Entrar',
                         style: GoogleFonts.montserrat(

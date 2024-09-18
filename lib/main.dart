@@ -5,9 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_biblioteca/firebase_options.dart';
 import 'package:flutter_biblioteca/screens/home_screen.dart';
 import 'package:flutter_biblioteca/screens/login_screen.dart';
+import 'package:get/get.dart';
 
 
-void main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp(
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Biblioteca',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
