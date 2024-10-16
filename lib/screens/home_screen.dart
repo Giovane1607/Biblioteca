@@ -43,11 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: Menu(user: widget.user),
       appBar: AppBar(
-        title: Text('Biblioteca'),
+        title: const Text('Bibliotecaa'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: (allBooks.isEmpty)
           ? const Center(
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 12),
                     color: Colors.red,
-                    child: Icon(
+                    child: const Icon(
                       Icons.delete,
                       color: Colors.white,
                     ),

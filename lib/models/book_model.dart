@@ -54,13 +54,13 @@ class BooksModel {
   factory BooksModel.fromJson(Map<String, dynamic> json) {
     return BooksModel(
       id: json["id"],
-      anoPublicacao: json["nome"] ?? '',
+      anoPublicacao: json["anoPublicacao"] ?? 0,
       autor: json["autor"] ?? '',
       capaUrl: json["capaUrl"] ?? '',
       editora: json["editora"] ?? '',
       genero: json["genero"] ?? '',
       nome: json["nome"] ?? '',
-      quantidadePaginas: json["quantidadePaginas"] ?? '',
+      quantidadePaginas: json["quantidadePaginas"] ?? 0,
       sinopse: json["sinopse"] ?? '',
     );
   }
