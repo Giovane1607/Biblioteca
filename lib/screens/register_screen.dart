@@ -68,7 +68,7 @@ class RegisterScreen extends StatelessWidget {
                             authService
                                 .cadastrarUsuario(
                               email: _emailController.text,
-                              Senha: _senhaController.text,
+                              senha: _senhaController.text,
                               nome: _nomeController.text,
                             )
                                 .then((String? erro) {

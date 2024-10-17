@@ -1,7 +1,5 @@
 import 'package:animated_book_widget/animated_book_widget.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter_biblioteca/models/book_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,7 +29,7 @@ class BooksWidgetCard extends StatelessWidget {
         itemCount: books.length,
         itemBuilder: (_, index) {
           return AnimatedBookWidget(
-            size: horizontalView ? Size.fromWidth(160) : Size.fromHeight(700),
+            size: horizontalView ? const Size.fromWidth(160) : const Size.fromHeight(700),
             padding: horizontalView
                 ? const EdgeInsets.symmetric(horizontal: 5)
                 : const EdgeInsets.symmetric(vertical: 5),
@@ -59,14 +57,14 @@ class BooksWidgetCard extends StatelessWidget {
                     SizedBox(
                       child: Container(
                           color: Colors.grey[200], // Cor de fundo
-                          padding: EdgeInsets.all(
+                          padding: const EdgeInsets.all(
                               20), // Padding em todas as direções
                           child: Column(
                             children: [
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Livro: " + books[index].nome,
+                                  "Livro: ${books[index].nome}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w900,
@@ -77,7 +75,7 @@ class BooksWidgetCard extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Autor: " + books[index].autor,
+                                  "Autor: ${books[index].autor}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -88,7 +86,7 @@ class BooksWidgetCard extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Editora: " + books[index].editora,
+                                  "Editora: ${books[index].editora}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -99,8 +97,7 @@ class BooksWidgetCard extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Ano de publicação: " +
-                                      books[index].anoPublicacao.toString(),
+                                  "Ano de publicação: ${books[index].anoPublicacao}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -111,7 +108,7 @@ class BooksWidgetCard extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Gênero: " + books[index].genero,
+                                  "Gênero: ${books[index].genero}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -122,8 +119,7 @@ class BooksWidgetCard extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "Total de páginas: " +
-                                      books[index].quantidadePaginas.toString(),
+                                  "Total de páginas: ${books[index].quantidadePaginas}",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -131,7 +127,7 @@ class BooksWidgetCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                               SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               Align(

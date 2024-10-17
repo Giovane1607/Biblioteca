@@ -1,14 +1,10 @@
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_biblioteca/screens/home_screen.dart';
 import 'package:flutter_biblioteca/screens/register_screen.dart';
 import 'package:flutter_biblioteca/utils/dialog_utils.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -40,11 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Future<void> validaLogin() async {
       try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _senhaController.text.trim(),
-        );
 
       } on FirebaseAuthException catch (e) {
         switch (e.code) {
@@ -117,13 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Container(
         color: Colors.blue,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -138,20 +129,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 80,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(hintText: 'E-mail'),
+                      decoration: const InputDecoration(hintText: 'E-mail'),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       obscureText: true,
                       controller: _senhaController,
-                      decoration: InputDecoration(hintText: 'Senha'),
+                      decoration: const InputDecoration(hintText: 'Senha'),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: validaLogin,
+                      style: const ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll<Color>(Colors.blue),
+                        minimumSize: WidgetStatePropertyAll<Size>(
+                            Size(double.infinity, 50)),
+                      ),
                       child: Text(
                         'Entrar',
                         style: GoogleFonts.montserrat(
@@ -160,14 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll<Color>(Colors.blue),
-                        minimumSize: WidgetStatePropertyAll<Size>(
-                            Size(double.infinity, 50)),
-                      ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                         style: const ButtonStyle(
                           minimumSize: WidgetStatePropertyAll<Size>(
@@ -188,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w600,
                               color: Colors.blue,
                             ))), //Trocar pela Logo do Google
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
                         Navigator.push(

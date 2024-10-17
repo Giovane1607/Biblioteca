@@ -26,7 +26,7 @@ class Menu extends StatelessWidget {
             
           ),
           ListTile(
-            leading: Icon(Icons.logout),
+            leading: const Icon(Icons.logout),
             title: const Text('Sair'),
             onTap: () {
               AuthService().deslogar();

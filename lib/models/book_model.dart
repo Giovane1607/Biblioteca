@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BooksModel {
-  String id;
+  String? id;
   int anoPublicacao;
   String autor;
   String capaUrl;
@@ -12,7 +12,7 @@ class BooksModel {
   String sinopse;
 
   BooksModel(
-      {required this.id,
+      {this.id,
       required this.anoPublicacao,
       required this.autor,
       required this.capaUrl,
