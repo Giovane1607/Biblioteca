@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
 
 class BookForm extends StatefulWidget {
   @override
@@ -13,56 +10,11 @@ class BookForm extends StatefulWidget {
 class _BookFormState extends State<BookForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   int _currentStep = 0; // Índice da etapa atual
-  File? _selectedImage; // Para armazenar a imagem selecionada
-  String? _uploadedImageUrl; // URL da imagem após upload
-
-  final ImagePicker _picker = ImagePicker();
 
   //inicializa o estado do formulário
   @override
   void initState() {
     super.initState();
-  }
-
-  // Função para selecionar uma imagem
-  Future<void> _pickImage() async {
-    var suporta = _picker.supportsImageSource(ImageSource.gallery);
-    print('Suporta: $suporta');
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-      await _uploadImageToFirebase();
-    }
-  }
-
-  // Função para fazer upload da imagem no Firebase Storage
-  Future<void> _uploadImageToFirebase() async {
-    if (_selectedImage == null) return;
-
-    try {
-      // Nome do arquivo no Firebase Storage
-      String fileName = 'books/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      Reference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child(fileName);
-
-      // Fazendo upload da imagem
-      UploadTask uploadTask = firebaseStorageRef.putFile(_selectedImage!);
-      TaskSnapshot taskSnapshot = await uploadTask;
-
-      // Obtendo a URL da imagem
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-      setState(() {
-        _uploadedImageUrl = downloadUrl; // Salva a URL da imagem
-      });
-
-      print('Image uploaded: $downloadUrl');
-    } catch (e) {
-      print('Erro ao fazer upload da imagem: $e');
-    }
   }
 
   // Função para avançar ou retroceder no formulário
@@ -76,8 +28,7 @@ class _BookFormState extends State<BookForm> {
         final formData = _formKey.currentState?.value;
         print(formData); // Dados do formulário completos
 
-        // Aqui você pode enviar os dados, incluindo o _uploadedImageUrl
-        print('URL da capa do livro: $_uploadedImageUrl');
+        // Aqui você pode enviar os dados
       }
     }
   }
@@ -151,21 +102,12 @@ class _BookFormState extends State<BookForm> {
                         ]),
                       ),
                       const SizedBox(height: 20),
-
-                      // Seção para o usuário escolher a imagem
-                      ElevatedButton(
-                        onPressed: _pickImage,
-                        child: Text(_selectedImage == null
-                            ? 'Selecionar Capa'
-                            : 'Trocar Capa'),
+                      FormBuilderTextField(
+                        name: 'capaUrl',
+                        decoration:
+                            const InputDecoration(labelText: 'URL da Capa'),
+                        validator: FormBuilderValidators.url(),
                       ),
-
-                      // Mostra uma miniatura da imagem selecionada, se houver
-                      if (_selectedImage != null)
-                        Image.file(
-                          _selectedImage!,
-                          height: 150,
-                        ),
                     ],
                   ),
                   isActive: _currentStep >= 1,
