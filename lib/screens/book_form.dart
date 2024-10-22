@@ -128,7 +128,10 @@ class _BookFormState extends State<BookForm> {
                             .collection('livros')
                             .add(newBook.toMap());
 
-                        Get.back();
+                        Navigator.of(context).pop();
+                        Get.offAll(() => HomeScreen(
+                              user: widget.user,
+                            ));
 
                         Get.snackbar(
                           'Sucesso',
