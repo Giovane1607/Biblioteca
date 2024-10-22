@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
-  
+
   const HomeScreen({super.key, required this.user});
 
   @override
@@ -26,30 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchInitialData();
-  }
-
-  Future<void> fetchInitialData() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      List<BooksModel> booksList = [];
-      var snapshot =
-          await FirebaseFirestore.instance.collection("livros").get();
-      booksList =
-          snapshot.docs.map((doc) => BooksModel.fromFirestore(doc)).toList();
-
-      setState(() {
-        allBooks = booksList;
-      });
-    } catch (e) {
-      print(e);
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   @override
@@ -61,51 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => BookForm(user: widget.user))?.then((value) {
-            print(value);
-            fetchInitialData();
-          });
+          Get.to(() => BookForm(user: widget.user))?.then((value) {});
         },
         child: const Icon(Icons.add),
       ),
-      body: (allBooks.isEmpty && !isLoading)
-          ? const Center(
-              child: Text(
-              'Nada por aqui. \nVamos registrar novos livros?',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
-            ))
-          : isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : ListView(
-                  padding: const EdgeInsets.only(left: 4, right: 4),
-                  children: List.generate(allBooks.length, (index) {
-                    BooksModel model = allBooks[index];
-                    return Dismissible(
-                      key: ValueKey<BooksModel>(model),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 12),
-                        color: Colors.red,
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      onDismissed: (direction) {
-                        remove(model);
-                      },
-                      child: BooksWidgetCard(
-                        horizontalView: horizontalView,
-                        books: allBooks,
-                        user: widget.user,
-                      ),
-                    );
-                  }),
-                ),
+      body: BooksWidgetCard(
+        horizontalView: horizontalView,
+        user: widget.user,
+      ),
     );
   }
-
-  void remove(BooksModel model) {}
 }
