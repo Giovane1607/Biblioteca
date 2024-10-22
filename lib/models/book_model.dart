@@ -10,17 +10,20 @@ class BooksModel {
   String nome;
   int quantidadePaginas;
   String sinopse;
+  String autorId;
 
-  BooksModel(
-      {this.id,
-      required this.anoPublicacao,
-      required this.autor,
-      required this.capaUrl,
-      required this.editora,
-      required this.genero,
-      required this.nome,
-      required this.quantidadePaginas,
-      required this.sinopse});
+  BooksModel({
+    this.id,
+    required this.anoPublicacao,
+    required this.autor,
+    required this.capaUrl,
+    required this.editora,
+    required this.genero,
+    required this.nome,
+    required this.quantidadePaginas,
+    required this.sinopse,
+    required this.autorId,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -33,6 +36,7 @@ class BooksModel {
       "nome": nome,
       "quantidadePaginas": quantidadePaginas,
       "sinopse": sinopse,
+      "autorId": autorId,
     };
   }
 
@@ -48,6 +52,7 @@ class BooksModel {
       nome: data["nome"] ?? '',
       quantidadePaginas: data["quantidadePaginas"],
       sinopse: data["sinopse"] ?? '',
+      autorId: data["autorId"],
     );
   }
 
@@ -62,6 +67,7 @@ class BooksModel {
       nome: json["nome"] ?? '',
       quantidadePaginas: json["quantidadePaginas"] ?? 0,
       sinopse: json["sinopse"] ?? '',
+      autorId: json["autorId"] ?? '',
     );
   }
 
@@ -69,37 +75,4 @@ class BooksModel {
   String toString() {
     return 'BooksModel{id: $id, anoPublicacao: $anoPublicacao, autor: $autor, capaUrl: $capaUrl, editora: $editora, genero: $genero, nome: $nome, quantidadePaginas: $quantidadePaginas, sinopse: $sinopse}';
   }
-
-  // BooksModel? copyWith({
-  //   String? newNome,
-  //   String? newDescricao,
-  //   Timestamp? newDataNascimento,
-  //   String? newImageUrl,
-  //   int? newPorte,
-  //   String? newRaca,
-  //   bool? newVacinado,
-  //   bool? newCastrado,
-  //   bool? newFilhos,
-  //   String? newTipo,
-  //   String? newDoadorId,
-  //   String? newDoadorNome,
-  //   String? newDoadorTelefone,
-  // }) {
-  //   return BooksModel(
-  //     id: id,
-  //     nome: newNome ?? nome,
-  //     doadorId: doadorId,
-  //     descricao: newDescricao ?? descricao,
-  //     dataNascimento: newDataNascimento ?? dataNascimento,
-  //     imageUrl: newImageUrl ?? imageUrl,
-  //     porte: newPorte ?? porte,
-  //     raca: newRaca ?? raca,
-  //     vacinado: newVacinado ?? vacinado,
-  //     castrado: newCastrado ?? castrado,
-  //     filhos: newFilhos ?? filhos,
-  //     tipo: newTipo ?? tipo,
-  //     doadorNome: newDoadorNome ?? doadorNome,
-  //     doadorTelefone: newDoadorTelefone ?? doadorTelefone,
-  //   );
-  // }
 }

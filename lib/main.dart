@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_biblioteca/app_routes.dart';
 import 'package:flutter_biblioteca/firebase_options.dart';
 import 'package:flutter_biblioteca/screens/home_screen.dart';
 import 'package:flutter_biblioteca/screens/login_screen.dart';
@@ -28,8 +27,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      getPages: AppRoutes.routes, // Use as rotas definidas
       home: const RoteadorTelas(),
     );
   }

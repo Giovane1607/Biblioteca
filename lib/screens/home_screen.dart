@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_biblioteca/components/books_widget.dart';
 import 'package:flutter_biblioteca/components/menu.dart';
 import 'package:flutter_biblioteca/models/book_model.dart';
+import 'package:flutter_biblioteca/screens/book_form.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,10 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void addNewBook() {
-    Get.toNamed('/book_form');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addNewBook();
+          Get.to(() => BookForm(user: widget.user))?.then((value) {
+            print(value);
+            fetchInitialData();
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: BooksWidgetCard(
                         horizontalView: horizontalView,
                         books: allBooks,
+                        user: widget.user,
                       ),
                     );
                   }),

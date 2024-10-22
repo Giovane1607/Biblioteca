@@ -1,15 +1,18 @@
 import 'package:animated_book_widget/animated_book_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biblioteca/models/book_model.dart';
+import 'package:flutter_biblioteca/screens/book_form.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Widget class example.
 class BooksWidgetCard extends StatelessWidget {
   final List<BooksModel> books;
-
+  final User user;
   const BooksWidgetCard({
     required this.horizontalView,
     required this.books,
+    required this.user,
     super.key,
   });
 
@@ -29,7 +32,9 @@ class BooksWidgetCard extends StatelessWidget {
         itemCount: books.length,
         itemBuilder: (_, index) {
           return AnimatedBookWidget(
-            size: horizontalView ? const Size.fromWidth(160) : const Size.fromHeight(700),
+            size: horizontalView
+                ? const Size.fromWidth(160)
+                : const Size.fromHeight(700),
             padding: horizontalView
                 ? const EdgeInsets.symmetric(horizontal: 5)
                 : const EdgeInsets.symmetric(vertical: 5),
@@ -47,12 +52,6 @@ class BooksWidgetCard extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 child: Column(
                   children: [
-                    // CircleAvatar(
-                    //   backgroundColor: const Color(0xFF01DFD7),
-                    //   child: Image.network(
-                    //     books[index].bookAuthorImgUrl,
-                    //   ),
-                    // ),
                     const SizedBox(height: 10),
                     SizedBox(
                       child: Container(
@@ -152,6 +151,21 @@ class BooksWidgetCard extends StatelessWidget {
                                   text: books[index].sinopse,
                                 ),
                               ),
+                              if (books[index].autorId == user.uid)
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BookForm(
+                                          book: books[index],
+                                          user: user,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('Editar'),
+                                ),
                             ],
                           )),
                     ),
