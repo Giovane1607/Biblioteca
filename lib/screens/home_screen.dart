@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
-
+  
   const HomeScreen({super.key, required this.user});
 
   @override
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: Menu(user: widget.user),
       appBar: AppBar(
-        title: const Text('Bibliotecaa'),
+        title: const Text('Biblioteca'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

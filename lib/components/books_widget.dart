@@ -1,8 +1,12 @@
 import 'package:animated_book_widget/animated_book_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biblioteca/models/book_model.dart';
 import 'package:flutter_biblioteca/screens/book_form.dart';
+import 'package:flutter_biblioteca/screens/home_screen.dart';
+import 'package:flutter_biblioteca/utils/dialog_utils.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Widget class example.
@@ -18,8 +22,76 @@ class BooksWidgetCard extends StatelessWidget {
 
   final bool horizontalView;
 
+  void showErrorMessage(String message) {
+      Get.dialog(
+        AlertDialog(
+          title: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+
+
   @override
   Widget build(BuildContext context) {
+    void confirmarExclusaoLivro(String? bookId) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Você tem certeza?"),
+            content: const Text("Realmente deseja excluir este livro?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () {
+                  try {
+                    FirebaseFirestore.instance
+                        .collection('livros')
+                        .doc(bookId)
+                        .delete()
+                        .then((_) {
+                      showCustomDialog(
+                        title: "Sucesso!",
+                        message: "Livro deletado com sucesso!",
+                        onConfirm: () {
+                          Navigator.of(context).pop();
+                          Get.offAll(() => HomeScreen(user: user,));
+                        },
+                        showCancelButton: false,
+                      );
+                    }).catchError((error) {
+                      showErrorMessage(
+                          "Um erro aconteceu ao deletar o animal: `$error`");
+                    });
+                  } catch (e) {
+                    showErrorMessage(
+                        "Um erro aconteceu ao deletar o animal: `$e`");
+                  }
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.red,
+                ),
+                child: const Text("Excluir"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+   
     return SizedBox(
       height: horizontalView
           ? 225
@@ -152,20 +224,33 @@ class BooksWidgetCard extends StatelessWidget {
                                 ),
                               ),
                               if (books[index].autorId == user.uid)
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BookForm(
-                                          book: books[index],
-                                          user: user,
-                                        ),
+                                Column(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => BookForm(
+                                              book: books[index],
+                                              user: user,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Editar'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                       confirmarExclusaoLivro(books[index].id);
+                                      },
+                                      child: const Text(
+                                        'Deletar',
+                                        style: TextStyle(color: Colors.red),
                                       ),
-                                    );
-                                  },
-                                  child: const Text('Editar'),
-                                ),
+                                    ),
+                                  ],
+                                )
                             ],
                           )),
                     ),

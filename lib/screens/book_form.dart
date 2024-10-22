@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biblioteca/models/book_model.dart';
+import 'package:flutter_biblioteca/screens/home_screen.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,11 @@ class BookForm extends StatefulWidget {
 class _BookFormState extends State<BookForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +128,8 @@ class _BookFormState extends State<BookForm> {
                             .collection('livros')
                             .add(newBook.toMap());
 
+                        Get.back();
+
                         Get.snackbar(
                           'Sucesso',
                           'Livro adicionado com sucesso!',
@@ -129,7 +137,6 @@ class _BookFormState extends State<BookForm> {
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
                         );
-                        Get.back();
                       } else {
                         widget.book?.anoPublicacao =
                             int.parse(formData['anoPublicacao']);
@@ -148,7 +155,12 @@ class _BookFormState extends State<BookForm> {
                             .doc(widget.book?.id)
                             .update(widget.book!.toMap());
 
-                        Get.back(result: true);
+                        // Get.back(result: true);
+                        Navigator.of(context).pop();
+                        Get.offAll(() => HomeScreen(
+                              user: widget.user,
+                            ));
+
                         Get.snackbar(
                           'Sucesso',
                           'Livro atualizado com sucesso!',

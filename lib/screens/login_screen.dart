@@ -1,11 +1,9 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biblioteca/screens/register_screen.dart';
 import 'package:flutter_biblioteca/utils/dialog_utils.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _senhaController = TextEditingController();
     super.initState();
   }
-  
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -36,7 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Future<void> validaLogin() async {
       try {
-
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _senhaController.text.trim(),
+        );
       } on FirebaseAuthException catch (e) {
         switch (e.code) {
           case 'user-not-found':
@@ -50,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             break;
           case 'wrong-password':
-
           case 'invalid-credential':
             showCustomDialog(
               title: 'Oops, tem certeza?',
